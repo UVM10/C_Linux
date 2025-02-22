@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -f danhsach ]; then
+if [ -f Danhsach ]; then
     echo "Working..."
     rm Danhsach
 fi
