@@ -95,7 +95,7 @@ void Giai_Phong_Danh_Sach(Nguoidung **Dau) {
 
 void Doc_Tu_File(Nguoidung **Dau, const char *filename) {
     Giai_Phong_Danh_Sach(Dau);
-    FILE *f = fopen(filename, "r");
+    FILE *f = fopen(filename, "rb");
     if (f == NULL) {
         printf("Khong the mo file %s!\n", filename);
         return;
