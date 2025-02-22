@@ -123,6 +123,18 @@ void Tim_Kiem(Nguoidung *Dau, char* ten) {
     }
 }
 
+void Hien_Thi_Danh_Sach(Nguoidung *Dau) {
+    if (Dau == NULL) {
+        printf("Danh sach rong!\n");
+        return;
+    }
+    printf("\nDanh sach nguoi dung:\n");
+    while (Dau != NULL) {
+        printf("- %s\n", Dau->tennguoidung);
+        Dau = Dau->next;
+    }
+}
+
 int main() {
     Nguoidung *Dau = NULL;
     unsigned int lua_chon, vitri;
@@ -135,8 +147,9 @@ int main() {
         printf("2. Ghi danh sach ten nguoi dung vao file\n");
         printf("3. Doc danh sach ten nguoi dung tu file\n");
         printf("4. Tim kiem ten nguoi dung\n");
-        printf("5. Xoa danh sach va thoat chuong trinh\n");
-        printf("Chon mot tuy chon (1-5): ");
+        printf("5. Hien thi danh sach nguoi dung\n");
+        printf("6. Xoa danh sach va thoat chuong trinh\n");
+        printf("Chon mot tuy chon (1-6): ");
         scanf("%d", &lua_chon);
         getchar();
 
@@ -163,6 +176,9 @@ int main() {
                 Tim_Kiem(Dau, ten);
                 break;
             case 5:
+                Hien_Thi_Danh_Sach(Dau);
+                break;
+            case 6:
                 printf("Thoat chuong trinh!\n");
                 Giai_Phong_Danh_Sach(&Dau);
                 return 0;
