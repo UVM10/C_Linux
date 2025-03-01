@@ -325,8 +325,9 @@ int main() {
         printf("2. Xoa task\n");
         printf("3. Sua task\n");
         printf("4. Luu danh sach\n");
-        printf("5. Tim kiem task theo ID\n");
-        printf("6. Thoat\n");
+        printf("5. Doc danh sach tu file\n");
+        printf("6. Tim kiem task theo ID\n");
+        printf("7. Thoat\n");
         printf("==========================\n");
         printf("Nhap lua chon: ");
 
@@ -350,10 +351,15 @@ int main() {
                 SaveToFile(head);
                 printf("Da luu danh sach!\n");
                 break;
-            case 5: 
+            case 5:
+                FreeList(&head);
+                ReadFromFile(&head);
+                printf("Da doc danh sach tu file!\n");
+                break;
+            case 6: 
                 Search(head);
                 break;
-            case 6:
+            case 7:
                 printf("Danh sach sau khi thoat chuong trinh se khong duoc luu!\nBan co muon luu danh sach khong? (1: Co, 0: Khong):");
                 int save;
                 scanf("%d", &save);
