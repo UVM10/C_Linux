@@ -75,7 +75,6 @@ void AddTask(Task **head) {
     printf("Them task thanh cong!\n");
 }
 
-
 void DeleteTask(Task **head) {
     if (!(*head)) {
         printf("Khong co task nao!\n");
