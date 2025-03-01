@@ -57,11 +57,24 @@ void AddTask(Task **head) {
     scanf("%d", &newTask->Status);
     getchar();
 
-    newTask->next = *head;
-    *head = newTask;
+    newTask->next = NULL; 
+
+    if (*head == NULL) 
+    {
+        *head = newTask;
+    } 
+    else 
+    {
+        Task *temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newTask;
+    }
 
     printf("Them task thanh cong!\n");
 }
+
 
 void DeleteTask(Task **head) {
     if (!(*head)) {
@@ -110,7 +123,6 @@ void EditTask(Task *head) {
         return;
     }
 
-    // Sửa tên
     printf("Tên cu: %s\nNhập tên mới (Enter de bo qua): ", edittask->TaskName);
     char editname[NAME_LENGTH];
     fgets(editname, NAME_LENGTH, stdin);
@@ -119,7 +131,6 @@ void EditTask(Task *head) {
         strcpy(edittask->TaskName, editname);
     }
 
-    // Sửa deadline
     printf("Deadline cu: %02d/%02d/%04d %02d:00\n",
            edittask->Deadline.day, edittask->Deadline.month,
            edittask->Deadline.year, edittask->Deadline.hour);
@@ -134,7 +145,6 @@ void EditTask(Task *head) {
         edittask->Deadline.year = yyyy;
     }
 
-    // Sửa mô tả
     printf("Mo ta cu: %s\nMo ta moi (Enter de bo qua): ", edittask->Description);
     char editdes[DESC_LENGTH];
     fgets(editdes, DESC_LENGTH, stdin);
@@ -143,7 +153,6 @@ void EditTask(Task *head) {
         strcpy(edittask->Description, editdes);
     }
 
-    // Sửa trạng thái
     printf("Trang thai cu: %s\n", edittask->Status ? "Hoan thanh" : "Chua xong");
     printf("Trang thai moi (0: Chua xong, 1: Hoan thanh, -1: Bo qua): ");
     int editstatus;
