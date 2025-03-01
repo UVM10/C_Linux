@@ -36,9 +36,6 @@ void AddTask(Task **head) {
         printf("Khong the tao task moi!\n");
         return;
     }
-    printf("Nhap ID: ");
-    scanf("%d", &newTask->ID);
-    getchar();
 
     printf("Nhap ten task: ");
     fgets(newTask->TaskName, NAME_LENGTH, stdin);
@@ -62,14 +59,17 @@ void AddTask(Task **head) {
     if (*head == NULL) 
     {
         *head = newTask;
+        newTask->ID = 1;
     } 
     else 
     {
         Task *temp = *head;
-        while (temp->next != NULL) {
+        while (temp->next != NULL) 
+        {
             temp = temp->next;
         }
         temp->next = newTask;
+        newTask->ID = temp->ID + 1;
     }
 
     printf("Them task thanh cong!\n");
