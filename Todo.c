@@ -22,11 +22,11 @@ typedef struct Date {
 } Date;
 
 typedef struct Task {
-    int ID;
     char TaskName[NAME_LENGTH];
-    Date Deadline;
     char Description[DESC_LENGTH];
-    int Status; // 0 = Pending, 1 = Complete
+    Date Deadline;
+    int ID;
+    int Status; 
     struct Task* next;
 } Task;
 
@@ -42,16 +42,16 @@ void AddTask(Task **head) {
 
     printf("Nhap ten task: ");
     fgets(newTask->TaskName, NAME_LENGTH, stdin);
-    strtok(newTask->TaskName, "\n");
+    newTask->TaskName[strcspn(newTask->TaskName, "\n")] = '\0';
 
-    printf("Nhap deadline (hh đd mm yy): ");
+    printf("Nhap deadline (hh dd mm yy): ");
     scanf("%d %d %d %d", &newTask->Deadline.hour, &newTask->Deadline.day,
           &newTask->Deadline.month, &newTask->Deadline.year);
     getchar();
 
     printf("Nhap noi dung: ");
     fgets(newTask->Description, DESC_LENGTH, stdin);
-    strtok(newTask->Description, "\n");
+    newTask->Description[strcspn(newTask->Description, "\n")] = '\0';
 
     printf("Nhap trang thai (0: Chua xong, 1: Hoan thanh): ");
     scanf("%d", &newTask->Status);
@@ -111,11 +111,11 @@ void EditTask(Task *head) {
     }
 
     // Sửa tên
-    printf("Tên cũ: %s\nNhập tên mới (Enter để bỏ qua): ", edittask->TaskName);
+    printf("Tên cu: %s\nNhập tên mới (Enter de bo qua): ", edittask->TaskName);
     char editname[NAME_LENGTH];
     fgets(editname, NAME_LENGTH, stdin);
     if (editname[0] != '\n') {
-        strtok(editname, "\n");
+        editname[strcspn(editname, "\n")] = '\0';
         strcpy(edittask->TaskName, editname);
     }
 
@@ -139,7 +139,7 @@ void EditTask(Task *head) {
     char editdes[DESC_LENGTH];
     fgets(editdes, DESC_LENGTH, stdin);
     if (editdes[0] != '\n') {
-        strtok(editdes, "\n");
+        editdes[strcspn(editdes, "\n")] = '\0';
         strcpy(edittask->Description, editdes);
     }
 
@@ -218,10 +218,36 @@ void Display(Task *head) {
     }
 }
 
+void Search(Task *head) {
+    if (!head) {
+        printf("Khong co task!\n");
+        return;
+    }
+    int searchID;
+    printf("Nhap ID: ");
+    scanf("%d", &searchID);
+    getchar();
+
+    int found = 0;
+    Task *current = head;
+    while (current) {
+        if (current->ID == searchID) {
+            printf("+----+------------------------+------------------+----------------------------------------+----------+\n");
+            PrintTaskRow(current);
+            found = 1;
+            break;
+        }
+        current = current->next;
+    }
+    if (!found) {
+        printf("Khong tim thay task co ID: %d\n", searchID);
+    }
+}
+
 void SaveToFile(Task *head) {
     FILE* fp = fopen(FILENAME, "w");
     if (!fp) {
-        printf("Không thể mở file để ghi!\n");
+        printf("Khong the mo file de ghi!\n");
         return;
     }
     Task* task = head;
@@ -236,7 +262,7 @@ void SaveToFile(Task *head) {
         task = task->next;
     }
     fclose(fp);
-    printf("Đã lưu danh sách công việc ra file!\n");
+    printf("Da luu danh sach cong viec ra file!\n");
 }
 
 void ReadFromFile(Task **head) {
@@ -252,14 +278,14 @@ void ReadFromFile(Task **head) {
             break;
         }
         fgets(newTask->TaskName, NAME_LENGTH, fp);
-        strtok(newTask->TaskName, "\n");
+        newTask->TaskName[strcspn(newTask->TaskName, "\n")] = '\0';
 
         fscanf(fp, "%d %d %d %d\n",
                &newTask->Deadline.hour, &newTask->Deadline.day,
                &newTask->Deadline.month, &newTask->Deadline.year);
 
         fgets(newTask->Description, DESC_LENGTH, fp);
-        strtok(newTask->Description, "\n");
+        newTask->Description[strcspn(newTask->Description, "\n")] = '\0';
 
         fscanf(fp, "%d\n", &newTask->Status);
 
@@ -286,12 +312,14 @@ int main() {
         Display(head);
 
         printf("\n========== MENU ==========\n");
-        printf("1. Thêm công việc\n");
-        printf("2. Xoá công việc\n");
-        printf("3. Sửa công việc\n");
-        printf("4. Lưu danh sách & Thoát\n");
+        printf("1. Them task\n");
+        printf("2. Xoa task\n");
+        printf("3. Sua task\n");
+        printf("4. Luu danh sach\n");
+        printf("5. Tim kiem task theo ID\n");
+        printf("6. Thoat\n");
         printf("==========================\n");
-        printf("Nhập lựa chọn: ");
+        printf("Nhap lua chon: ");
 
         int choice;
         scanf("%d", &choice);
@@ -300,17 +328,43 @@ int main() {
         switch (choice) {
             case 1:
                 AddTask(&head);
+                printf("Da them task!\n");
                 break;
             case 2:
                 DeleteTask(&head);
+                printf("Da xoa task!\n");
                 break;
             case 3:
                 EditTask(head);
                 break;
             case 4:
                 SaveToFile(head);
-                FreeList(&head);
-                return 0;
+                printf("Da luu danh sach!\n");
+                break;
+            case 5: 
+                Search(head);
+                break;
+            case 6:
+                printf("Danh sach sau khi thoat chuong trinh se khong duoc luu!\nBan co muon luu danh sach khong? (1: Co, 0: Khong):");
+                int save;
+                scanf("%d", &save);
+                getchar();
+                switch(save)
+                {
+                    case 1:
+                        SaveToFile(head);
+                        FreeList(&head);
+                        printf("Da luu danh sach va thoat chuong trinh!\n");
+                        return 0;
+                    case 0:
+                        FreeList(&head);
+                        printf("Da thoat chuong trinh!\n");
+                        return 0;
+                    default:
+                        printf("Khong hop le!\n");
+                        break;
+                }
+                break;
             default:
                 printf("Khong hop le!\n");
                 break;
